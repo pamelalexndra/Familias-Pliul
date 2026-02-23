@@ -388,8 +388,10 @@ hr {
     }
 }
 
-.hero-banner {
-    background-position: center center;  
+@media (max-width: 768px) {
+    .hero-banner {
+        height: 180px;  
+    }
 }
 
 @media (max-width: 768px) {
