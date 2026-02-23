@@ -384,6 +384,22 @@ if df_participantes is not None and len(df_participantes) > 0:
                 st.session_state.df_result = df_participantes
                 st.session_state.lideres   = lideres
 
+@st.dialog("Detalle de familia", width="large")
+def ver_familia(titulo, filas_html, h, m, prom, vari, unic, total):
+    st.markdown(f"""
+    <div class="familia-meta">
+        <span class="meta-chip">👥 {h}H / {m}M</span>
+        <span class="meta-chip">🎂 Prom. {prom:.1f}</span>
+        <span class="meta-chip">📊 Var. {vari:.2f}</span>
+        <span class="meta-chip">🎓 {unic}/{total} únicas</span>
+    </div>
+    <table class="personas-table">
+        <thead><tr>
+            <th>Nombre</th><th>Sexo</th><th>Edad</th><th>Carrera</th>
+        </tr></thead>
+        <tbody>{filas_html}</tbody>
+    </table>""", unsafe_allow_html=True)
+
     # ============================================================
     # PASO 5: RESULTADOS
     # ============================================================
@@ -424,18 +440,25 @@ if df_participantes is not None and len(df_participantes) > 0:
                         </tr>"""
 
                     with cols[i % len(cols)]:
-                        with st.expander(f"Familia {i+1}  •  {h}H / {m}M  •  Prom. {prom:.1f}", expanded=True):
-                            st.markdown(f"""
+                        st.markdown(f"""
+                        <div class="familia-card">
+                            <p class="familia-titulo">Familia {i+1}</p>
                             <div class="familia-meta">
+                                <span class="meta-chip">👥 {h}H / {m}M</span>
+                                <span class="meta-chip">🎂 Edad promedio {prom:.1f}</span>
                                 <span class="meta-chip">📊 Var. {vari:.2f}</span>
-                                <span class="meta-chip">🎓 {unic}/{len(g)} únicas</span>
+                                <span class="meta-chip">🎓 {unic}/{len(g)} carreras únicas</span>
                             </div>
                             <table class="personas-table">
                                 <thead><tr>
                                     <th>Nombre</th><th>Sexo</th><th>Edad</th><th>Carrera</th>
                                 </tr></thead>
                                 <tbody>{filas_html}</tbody>
-                            </table>""", unsafe_allow_html=True)
+                            </table>
+                        </div>""", unsafe_allow_html=True)
+                        
+                        if st.button(f"⛶ Ver completa", key=f"expand_{i}"):
+                            ver_familia(f"Familia {i+1}", filas_html, h, m, prom, vari, unic, len(g))
 
         st.write("---")
         c1, c2, c3 = st.columns([1, 2, 1])
