@@ -332,7 +332,7 @@ if df_participantes is not None and len(df_participantes) > 0:
 
     with col_l:
         n_grupos = st.number_input(
-            "¿Cuántos grupos?", min_value=2,
+            "¿Cuántas familias?", min_value=2,
             max_value=len(df_participantes) // 2,
             value=min(6, len(df_participantes) // 5), step=1,
         )
