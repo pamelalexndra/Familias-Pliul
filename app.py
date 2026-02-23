@@ -223,7 +223,15 @@ st.markdown('<p class="sub-title">Ingresar la lista de personas que conformarán
 st.markdown('<div class="botones-modo">', unsafe_allow_html=True)
 c1, c2, c3, c4 = st.columns([1, 1.5, 1.5, 1])
 with c2:
-    if st.button("📂 Subir archivo Excel", use_container_width=True):
+    if st.button("🔄 Reiniciar", use_container_width=True):
+        st.session_state.modo = "archivo"
+        st.session_state.participantes = []
+        st.session_state.pares = []
+        if "mejores" in st.session_state:
+            del st.session_state.mejores
+        st.rerun()
+with c2:
+    if st.button("📂 Browse files para cargar archivo", use_container_width=True):
         st.session_state.modo = "archivo"
 with c3:
     if st.button("✏️ Agregar manualmente", use_container_width=True):

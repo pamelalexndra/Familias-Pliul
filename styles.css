@@ -86,7 +86,6 @@
 /* ============================================================
    BOTONES PILL
    ============================================================ */
-/* En styles.css, agrega esto */
 button[kind="secondary"] {
     padding: 0.2rem 0.2rem !important;
     font-size: 0.7rem !important;
