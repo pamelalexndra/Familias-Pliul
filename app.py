@@ -317,7 +317,7 @@ if df_participantes is not None and len(df_participantes) > 0:
             max_value=len(df_participantes) // 2,
             value=min(6, len(df_participantes) // 5), step=1,
         )
-        st.markdown("**🏅 Líderes** — Deben quedar en grupos distintos")
+        st.markdown("**Restricciones** — Deben quedar en grupos distintos")
         lideres = st.multiselect(
             "Líderes", options=nombres_disponibles,
             max_selections=n_grupos, label_visibility="collapsed",
