@@ -254,6 +254,8 @@ if st.session_state.modo == "archivo":
     if archivo:
         try:
             df_leido = pd.read_excel(archivo)
+            st.write(df_leido.head(10))  
+            st.write("Columnas:", df_leido.columns.tolist())
             df_leido.columns = df_leido.columns.astype(str).str.strip()
 
             cols_req = {"Nombre", "Sexo", "Edad", "Carrera"}
