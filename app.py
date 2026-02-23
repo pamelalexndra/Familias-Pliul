@@ -220,23 +220,23 @@ def generar_excel_resultados(df, mejores_resultados, lideres):
 st.markdown('<h1 class="main-title">Participantes</h1>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">Ingresar la lista de personas que conformarán las familias</p>', unsafe_allow_html=True)
 
-st.markdown('<div class="botones-modo">', unsafe_allow_html=True)
 c1, c2, c3, c4 = st.columns([1, 1.5, 1.5, 1])
 with c2:
-    if st.button("🔄 Reiniciar", use_container_width=True):
-        st.session_state.modo = "archivo"
-        st.session_state.participantes = []
-        st.session_state.pares = []
-        if "mejores" in st.session_state:
-            del st.session_state.mejores
-        st.rerun()
-with c2:
-    if st.button("📂 Browse files para cargar archivo", use_container_width=True):
-        st.session_state.modo = "archivo"
+    try:
+        with open("plantilla_participantes.xlsx", "rb") as f:
+            st.download_button(
+                "⬇️ Descargar plantilla", data=f,
+                file_name="plantilla_participantes.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True,
+            )
+    except FileNotFoundError:
+        pass
 with c3:
     if st.button("✏️ Agregar manualmente", use_container_width=True):
         st.session_state.modo = "manual"
-st.markdown('</div>', unsafe_allow_html=True)
+
+st.write("---")
 
 # ============================================================
 # PASO 2: CARGA DE PARTICIPANTES
@@ -244,21 +244,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 df_participantes = None
 
 if st.session_state.modo == "archivo":
-    col_dl, col_up = st.columns([1, 2])
-    with col_dl:
-        try:
-            with open("plantilla_participantes.xlsx", "rb") as f:
-                st.download_button(
-                    "Descargar plantilla", data=f,
-                    file_name="plantilla_participantes.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                )
-        except FileNotFoundError:
-            pass
-    with col_up:
-        archivo = st.file_uploader("Sube tu Excel", type=["xlsx"], label_visibility="collapsed")
-        if archivo:
-            st.write("Archivo detectado")
+    archivo = st.file_uploader("Sube tu Excel", type=["xlsx"], label_visibility="collapsed")
 
     if archivo:
         try:
@@ -270,32 +256,26 @@ if st.session_state.modo == "archivo":
                 st.error(f"El archivo debe tener estas columnas: {cols_req}")
                 st.stop()
 
-            # Limpiar todas las columnas de texto
             for col in ["Nombre", "Sexo", "Carrera"]:
                 df_leido[col] = df_leido[col].astype(str).str.strip()
 
-            # Quitar filas vacías o de ejemplo
             df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != ""]
             df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != "nan"]
             df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != "nombre"]
 
-            # Normalizar Sexo
             df_leido["Sexo"] = df_leido["Sexo"].str.strip().str.capitalize()
 
-            # Validar Sexo
             sexos_invalidos = df_leido[~df_leido["Sexo"].isin(["Hombre", "Mujer"])]
             if not sexos_invalidos.empty:
                 st.error(f"Valores inválidos en Sexo: {sexos_invalidos['Sexo'].unique().tolist()}")
                 st.stop()
 
-            # Validar duplicados
             nombres_lower = df_leido["Nombre"].str.lower().str.strip()
             if nombres_lower.duplicated().any():
                 dupes = df_leido[nombres_lower.duplicated(keep=False)]["Nombre"].unique()
                 st.error(f"Nombres duplicados: {list(dupes)}")
                 st.stop()
 
-            # Validar edades
             df_leido["Edad"] = pd.to_numeric(df_leido["Edad"], errors="coerce")
             if df_leido["Edad"].isna().any():
                 st.error("Hay edades inválidas. Revisa que todas sean números.")
@@ -309,7 +289,6 @@ if st.session_state.modo == "archivo":
 
         except Exception as e:
             st.error(f"Error al leer el archivo: {e}")
-
 else:
     with st.form("form_agregar", clear_on_submit=True):
         c1, c2, c3, c4 = st.columns([3, 1, 1, 2])
