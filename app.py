@@ -12,8 +12,6 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
 st.set_page_config(page_title="PLIUL - Formador de Familias", layout="wide")
 
-tab_familias, tab_stats = st.tabs(["👨‍👩‍👧 Familias", "📊 Estadísticas"])
-
 def cargar_css(ruta_css="styles.css", ruta_foto="foto_pliul.png"):
     try:
         with open(ruta_foto, "rb") as f:
@@ -269,11 +267,7 @@ if st.session_state.modo == "archivo":
                 df_participantes = df_leido[["Nombre", "Sexo", "Edad", "Carrera"]].copy()
                 df_participantes["Edad"] = df_participantes["Edad"].astype(int)
                 st.success(f"✅ {len(df_participantes)} participantes cargados.")
-                st.dataframe(
-                df_participantes.style.set_properties(subset=["Edad"], **{"text-align": "center"}),
-                use_container_width=True,
-                hide_index=True
-                )
+                st.dataframe(df_participantes, use_container_width=True, hide_index=True)
         except Exception as e:
             st.error(f"Error al leer el archivo: {e}")
 
@@ -302,13 +296,8 @@ else:
         if cb.button("🗑️ Borrar todos"):
             st.session_state.participantes = []
             st.rerun()
-        st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.dataframe(
-        df_participantes.style.set_properties(subset=["Edad"], **{"text-align": "center"}),
-        use_container_width=True,
-        hide_index=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
+        # FIX: usar df_manual, no df_participantes (que aún es None aquí)
+        st.dataframe(df_manual, use_container_width=True, hide_index=True)
         df_participantes = df_manual.copy()
 
 # ============================================================
@@ -350,8 +339,8 @@ if df_participantes is not None and len(df_participantes) > 0:
                     st.session_state.pares.append((par1, par2))
         if st.session_state.pares:
             for idx, (p1, p2) in enumerate(st.session_state.pares):
-                cp, cx = st.columns([2, 1])
-                cp.markdown(f"<span style='color:#94a3b8'>🚫 {p1} ↔ {p2}</span>", unsafe_allow_html=True)
+                cp, cx = st.columns([8, 1])
+                cp.markdown(f"<span style='color:#94a3b8; font-size:0.95rem'>🚫 {p1} ↔ {p2}</span>", unsafe_allow_html=True)
                 if cx.button("✕", key=f"del_{idx}"):
                     st.session_state.pares.pop(idx)
                     st.rerun()
@@ -386,8 +375,16 @@ if df_participantes is not None and len(df_participantes) > 0:
                 st.session_state.df_result = df_participantes
                 st.session_state.lideres   = lideres
 
+
+# ============================================================
+# DIALOG — debe estar en el nivel raíz del script
+# ============================================================
 @st.dialog("Detalle de familia", width="large")
 def ver_familia(titulo, filas_html, h, m, prom, vari, unic, total):
+    st.markdown(
+        f"<h3 style='color:white; font-family:Cormorant Garamond,serif; margin-bottom:12px'>{titulo}</h3>",
+        unsafe_allow_html=True
+    )
     st.markdown(f"""
     <div class="familia-meta">
         <span class="meta-chip">👥 {h}H / {m}M</span>
@@ -397,36 +394,45 @@ def ver_familia(titulo, filas_html, h, m, prom, vari, unic, total):
     </div>
     <table class="personas-table">
         <thead><tr>
-            <th>Nombre</th><th>Sexo</th><th>Edad</th><th>Carrera</th>
+            <th>Nombre</th><th>Sexo</th><th style="text-align:center">Edad</th><th>Carrera</th>
         </tr></thead>
         <tbody>{filas_html}</tbody>
     </table>""", unsafe_allow_html=True)
+
 
 # ============================================================
 # PASO 5: RESULTADOS
 # ============================================================
 if "mejores" in st.session_state and st.session_state.mejores:
-        mejores     = st.session_state.mejores
-        df_res      = st.session_state.df_result
-        lideres_res = st.session_state.get("lideres", [])
+    mejores     = st.session_state.mejores
+    df_res      = st.session_state.df_result
+    lideres_res = st.session_state.get("lideres", [])
 
-        st.write("---")
-        st.markdown('<h2 class="section-heading">Familias generadas</h2>', unsafe_allow_html=True)
+    st.write("---")
+    st.markdown('<h2 class="section-heading">Familias generadas</h2>', unsafe_allow_html=True)
 
-        if len(mejores) > 1:
-            st.markdown(
-                f"<p style='text-align:center; color:#94a3b8'>Se encontraron <b>{len(mejores)}</b> configuraciones distintas con la misma calidad óptima.</p>",
-                unsafe_allow_html=True
-            )
-        tabs = st.tabs([f"Opción {i+1}" for i in range(len(mejores))]) if len(mejores) > 1 else [st.container()]
+    if len(mejores) > 1:
+        st.markdown(
+            f"<p style='text-align:center; color:#94a3b8'>Se encontraron <b>{len(mejores)}</b> configuraciones distintas con la misma calidad óptima.</p>",
+            unsafe_allow_html=True
+        )
 
-        for tab, grupos in zip(tabs, mejores):
-            with tab:
-                cols = st.columns(min(3, int(n_grupos)))
+    # Si hay varias opciones, tabs de opciones; si solo una, contenedor simple
+    opciones_tabs = st.tabs([f"Opción {i+1}" for i in range(len(mejores))]) if len(mejores) > 1 else [st.container()]
+
+    for op_tab, grupos in zip(opciones_tabs, mejores):
+        with op_tab:
+
+            # Tabs Familias / Estadísticas dentro de cada opción
+            tab_familias, tab_stats = st.tabs(["👨‍👩‍👧 Familias", "📊 Estadísticas"])
+
+            # ── FAMILIAS ──────────────────────────────────────────
+            with tab_familias:
+                cols = st.columns(min(3, len(grupos)))
                 for i, g_indices in enumerate(grupos):
                     g    = df_res.loc[g_indices]
-                    h    = (g["Sexo"] == "Hombre").sum()
-                    m    = (g["Sexo"] == "Mujer").sum()
+                    h    = int((g["Sexo"] == "Hombre").sum())
+                    m    = int((g["Sexo"] == "Mujer").sum())
                     prom = g["Edad"].mean()
                     vari = g["Edad"].var()
                     unic = g["Carrera"].nunique()
@@ -437,7 +443,7 @@ if "mejores" in st.session_state and st.session_state.mejores:
                         filas_html += f"""<tr>
                             <td>{p['Nombre']}</td>
                             <td>{badge}</td>
-                            <td>{int(p['Edad'])}</td>
+                            <td style="text-align:center; color:#94a3b8">{int(p['Edad'])}</td>
                             <td style="color:#cbd5e1">{p['Carrera']}</td>
                         </tr>"""
 
@@ -453,50 +459,68 @@ if "mejores" in st.session_state and st.session_state.mejores:
                             </div>
                             <table class="personas-table">
                                 <thead><tr>
-                                    <th>Nombre</th><th>Sexo</th><th>Edad</th><th>Carrera</th>
+                                    <th>Nombre</th><th>Sexo</th>
+                                    <th style="text-align:center">Edad</th><th>Carrera</th>
                                 </tr></thead>
                                 <tbody>{filas_html}</tbody>
                             </table>
                         </div>""", unsafe_allow_html=True)
-                        
-                        if st.button(f"⛶ Ver completa", key=f"expand_{i}"):
+
+                        if st.button("⛶ Ver completa", key=f"expand_{i}_{id(grupos)}"):
                             ver_familia(f"Familia {i+1}", filas_html, h, m, prom, vari, unic, len(g))
 
-        st.write("---")
-        c1, c2, c3 = st.columns([1, 2, 1])
-        with c2:
-            excel_buf = generar_excel_resultados(df_res, mejores, lideres_res)
-            st.download_button(
-                "⬇️  Descargar resultados en Excel",
-                data=excel_buf,
-                file_name="familias_resultado.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                use_container_width=True,
-            )
+            # ── ESTADÍSTICAS ──────────────────────────────────────
+            with tab_stats:
+                col1, col2, col3 = st.columns(3)
+                col1.metric("Total participantes", len(df_res))
+                col2.metric("Grupos", len(grupos))
+                col3.metric("Promedio por grupo", round(len(df_res) / len(grupos), 1))
 
-with tab_stats:
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Total participantes", len(df_res))
-    col2.metric("Grupos", len(grupos))
-    col3.metric("Promedio por grupo", round(len(df_res) / len(grupos), 1))
+                st.write("---")
+
+                cs, ce = st.columns(2)
+                with cs:
+                    st.markdown("**Distribución por sexo**")
+                    st.bar_chart(df_res["Sexo"].value_counts())
+                with ce:
+                    st.markdown("**Distribución de edades**")
+                    st.bar_chart(df_res["Edad"].value_counts().sort_index())
+
+                st.markdown("**Hombres y mujeres por familia**")
+                resumen = []
+                for i, g_indices in enumerate(grupos):
+                    g = df_res.loc[g_indices]
+                    resumen.append({
+                        "Familia": f"Familia {i+1}",
+                        "Hombres": int((g["Sexo"] == "Hombre").sum()),
+                        "Mujeres": int((g["Sexo"] == "Mujer").sum()),
+                        "Edad promedio": round(g["Edad"].mean(), 1),
+                        "Varianza edad": round(g["Edad"].var(), 2),
+                        "Carreras únicas": int(g["Carrera"].nunique()),
+                    })
+                df_resumen = pd.DataFrame(resumen).set_index("Familia")
+                st.bar_chart(df_resumen[["Hombres", "Mujeres"]])
+
+                st.markdown("**Resumen por familia**")
+                st.dataframe(df_resumen, use_container_width=True)
+
+                st.markdown("**Carreras más frecuentes**")
+                st.dataframe(
+                    df_res["Carrera"].value_counts().reset_index().rename(
+                        columns={"index": "Carrera", "count": "Cantidad"}
+                    ),
+                    use_container_width=True,
+                    hide_index=True,
+                )
 
     st.write("---")
-
-    # Distribución por sexo
-    st.markdown("**Distribución por sexo**")
-    sexo_counts = df_res["Sexo"].value_counts().reset_index()
-    st.bar_chart(sexo_counts.set_index("Sexo"))
-
-    # Distribución de edades
-    st.markdown("**Distribución de edades**")
-    st.bar_chart(df_res["Edad"].value_counts().sort_index())
-
-    # Carreras más frecuentes
-    st.markdown("**Carreras**")
-    st.dataframe(
-        df_res["Carrera"].value_counts().reset_index().rename(
-            columns={"index": "Carrera", "Carrera": "Cantidad"}
-        ),
-        use_container_width=True,
-        hide_index=True
-    )
+    c1, c2, c3 = st.columns([1, 2, 1])
+    with c2:
+        excel_buf = generar_excel_resultados(df_res, mejores, lideres_res)
+        st.download_button(
+            "⬇️  Descargar resultados en Excel",
+            data=excel_buf,
+            file_name="familias_resultado.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            use_container_width=True,
+        )
