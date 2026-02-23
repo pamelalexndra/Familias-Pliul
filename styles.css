@@ -331,3 +331,39 @@ hr {
 .stCaptionContainer {
     color: #475569 !important;
 }
+
+@media (max-width: 768px) {
+    .block-container {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    .familia-card {
+        padding: 14px 12px;
+    }
+
+    .personas-table th:nth-child(2),
+    .personas-table td:nth-child(2),
+    .personas-table th:nth-child(3),
+    .personas-table td:nth-child(3) {
+        display: none;
+    }
+
+    .personas-table {
+        font-size: 0.78rem;
+    }
+
+    .personas-table td:nth-child(1) {
+        max-width: 160px;
+        word-break: break-word;
+    }
+
+    .familia-titulo {
+        font-size: 1.1rem;
+    }
+
+    .meta-chip {
+        font-size: 0.72rem;
+        padding: 2px 8px;
+    }
+}
