@@ -252,6 +252,7 @@ if st.session_state.modo == "archivo":
     if archivo:
         try:
             df_leido = pd.read_excel(archivo)
+            df_leido = df_leido.dropna(subset=["Nombre"])
             cols_req = {"Nombre", "Sexo", "Edad", "Carrera"}
             if not cols_req.issubset(df_leido.columns):
                 st.error(f"El archivo debe tener estas columnas: {cols_req}")
@@ -347,7 +348,7 @@ if df_participantes is not None and len(df_participantes) > 0:
                     st.session_state.pares.append((par1, par2))
         if st.session_state.pares:
             for idx, (p1, p2) in enumerate(st.session_state.pares):
-                cp, cx = st.columns([8, 1])
+                cp, cx = st.columns([2, 1])
                 cp.markdown(f"<span style='color:#94a3b8'>🚫 {p1} ↔ {p2}</span>", unsafe_allow_html=True)
                 if cx.button("✕", key=f"del_{idx}"):
                     st.session_state.pares.pop(idx)
