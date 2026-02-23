@@ -176,7 +176,7 @@ def generar_excel_resultados(df, mejores_resultados, lideres):
             prom = g["Edad"].mean()
             vari = g["Edad"].var()
             c    = COLORES[i % len(COLORES)]
-            ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=5)
+            ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=4)
             t = ws.cell(row=fila, column=1,
                         value=f"  FAMILIA {i+1}   |   {h}H / {m}M   |   Edad promedio: {prom:.1f}   |   Varianza: {vari:.2f}")
             t.font      = Font(bold=True, name="Calibri", size=11, color="FFFFFF")
