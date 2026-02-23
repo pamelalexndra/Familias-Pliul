@@ -381,3 +381,9 @@ hr {
         font-size: 0.8rem !important;
     }
 }
+
+@media (max-width: 768px) {
+    .botones-modo {
+        display: none !important;
+    }
+}

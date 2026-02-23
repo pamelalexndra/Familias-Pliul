@@ -220,6 +220,7 @@ def generar_excel_resultados(df, mejores_resultados, lideres):
 st.markdown('<h1 class="main-title">Participantes</h1>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">Ingresar la lista de personas que conformarán las familias</p>', unsafe_allow_html=True)
 
+st.markdown('<div class="botones-modo">', unsafe_allow_html=True)
 c1, c2, c3, c4 = st.columns([1, 1.5, 1.5, 1])
 with c2:
     if st.button("📂 Subir archivo Excel", use_container_width=True):
@@ -227,8 +228,7 @@ with c2:
 with c3:
     if st.button("✏️ Agregar manualmente", use_container_width=True):
         st.session_state.modo = "manual"
-
-st.write("---")
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================
 # PASO 2: CARGA DE PARTICIPANTES
@@ -487,7 +487,7 @@ if "mejores" in st.session_state and st.session_state.mejores:
                 fig_sexo = px.bar(
                     df_res["Sexo"].value_counts().reset_index(),
                     x="Sexo", y="count", color="Sexo",
-                    color_discrete_map={"Hombre": "#93c5fd", "Mujer": "#f9a8d4"},
+                    color_discrete_map={"Hombre": "#2326da", "Mujer": "#d08421"},
                 )
                 fig_sexo.update_layout(
                     paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
@@ -523,7 +523,7 @@ if "mejores" in st.session_state and st.session_state.mejores:
             fig_hm = px.bar(
                 df_resumen, x="Familia", y=["Hombres", "Mujeres"],
                 barmode="group",
-                color_discrete_map={"Hombres": "#93c5fd", "Mujeres": "#f9a8d4"},
+                color_discrete_map={"Hombres": "#2326da", "Mujeres": "#d08421"},
             )
             fig_hm.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
