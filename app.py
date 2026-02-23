@@ -325,7 +325,7 @@ else:
 if df_participantes is not None and len(df_participantes) > 0:
 
     st.write("---")
-    st.markdown('<h2 class="section-heading">Configuración de grupos</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-heading">Configuración de familias</h2>', unsafe_allow_html=True)
 
     nombres_disponibles = sorted(df_participantes["Nombre"].tolist())
     col_l, col_r = st.columns(2)
