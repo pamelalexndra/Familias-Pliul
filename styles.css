@@ -394,7 +394,7 @@ hr {
 
 @media (max-width: 768px) {
     .hero-banner {
-        height: 250px;                       
+        height: 150px;                       
         background-position: center top;     
     }
 }
