@@ -393,7 +393,10 @@ hr {
         height: 180px;  
     }
     .banner-label {
-      height: 30px;
+        font-size: 0.5rem;
+        padding: 2px 5px;
+        bottom:12px;
+        right: 16px;
     }
 }
 
