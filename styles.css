@@ -1,130 +1,147 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Open+Sans:wght@400;600&display=swap');
 
-:root {
-    --primary: #1e293b;
-    --accent: #e2b13c;
-    --bg-light: #f8fafc;
-    --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+/* Paleta: Azul (#1A365D), Dorado (#D4AF37), Blanco (#FFFFFF) */
+
+.stApp {
+    background: radial-gradient(circle at top right, #fdfdfd, #f0f4f8);
 }
 
-/* Base */
-html, body, [class*="st-"] { 
-    font-family: 'Inter', sans-serif; 
-    color: #334155;
+/* Reducir espacios en blanco de Streamlit */
+.block-container {
+    padding-top: 1.5rem !important;
+    padding-bottom: 0rem !important;
+    max-width: 95% !important;
 }
 
-.stApp { background-color: var(--bg-light); }
-
-/* Header Moderno */
+/* Header Compacto y Elegante */
 .main-header {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    border-radius: 24px;
-    padding: 3rem 2.5rem;
-    margin-bottom: 2rem;
+    background: #1A365D;
+    border-bottom: 4px solid #D4AF37;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
     color: white;
-    text-align: center;
-    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(26, 54, 93, 0.2);
 }
 
 .main-header h1 {
-    font-family: 'Outfit', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(to right, #fff, #e2b13c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem !important;
+    font-weight: 800;
+    margin: 0;
+    color: #D4AF37;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Tarjetas de Sección */
+/* Tarjetas de Sección Compactas */
 .section-card {
     background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    box-shadow: var(--card-shadow);
-}
-
-.step-badge {
-    display: inline-flex;
-    align-items: center;
-    background: #f1f5f9;
-    color: #475569;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 8px;
-    margin-bottom: 1rem;
     border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .section-title {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.5rem;
-    color: #0f172a;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1A365D;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* Tarjetas de Grupos (Familias) */
+.section-title::before {
+    content: '';
+    width: 4px;
+    height: 18px;
+    background: #D4AF37;
+    border-radius: 2px;
+}
+
+/* Tabla de Grupos Estilo Moderno */
 .familia-card {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 1px solid #e2e8f0;
-    transition: transform 0.2s ease;
-    height: 100%;
-}
-
-.familia-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.05);
+    border: 1px solid #d4af3744;
+    border-top: 3px solid #D4AF37;
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 10px;
 }
 
 .familia-titulo {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1e293b;
-    border-bottom: 2px solid #f1f5f9;
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1A365D;
+    margin-bottom: 8px;
+    text-align: center;
+    background: #f8f9fa;
+    padding: 5px;
+    border-radius: 4px;
 }
 
 .meta-chip {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 0.75rem;
-    color: #64748b;
-    font-weight: 500;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.7rem;
+    background: #1A365D;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 4px;
 }
 
-/* Badges de Género */
-.badge-hombre {
-    background: #dcfce7; color: #166534;
-    padding: 2px 10px; border-radius: 6px; font-weight: 600; font-size: 0.7rem;
-}
-.badge-mujer {
-    background: #fef2f2; color: #991b1b;
-    padding: 2px 10px; border-radius: 6px; font-weight: 600; font-size: 0.7rem;
+/* Estilo de tablas internas */
+.personas-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    margin-top: 8px;
 }
 
-/* Botones */
-.stButton > button {
-    border-radius: 12px !important;
-    transition: all 0.3s ease !important;
+.personas-table th {
+    background: #f1f5f9;
+    color: #475569;
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid #cbd5e1;
 }
 
+.personas-table td {
+    padding: 4px 8px;
+    border-bottom: 1px dotted #e2e8f0;
+}
+
+/* Badges */
+.badge-hombre { color: #1e40af; font-weight: bold; }
+.badge-mujer { color: #be123c; font-weight: bold; }
+.lider-badge { 
+    background: #D4AF37; 
+    color: #1A365D; 
+    padding: 1px 5px; 
+    border-radius: 3px; 
+    font-size: 0.65rem; 
+    font-weight: bold;
+}
+
+/* Botones Primary */
 .stButton > button[kind="primary"] {
-    background: #1e293b !important;
-    border: none !important;
-    padding: 0.75rem 2rem !important;
+    background-color: #1A365D !important;
+    color: #D4AF37 !important;
+    border: 2px solid #D4AF37 !important;
+    width: 100%;
+    font-weight: 700 !important;
+    text-transform: uppercase;
 }
 
 .stButton > button[kind="primary"]:hover {
-    background: #0f172a !important;
-    box-shadow: 0 4px 12px rgba(30, 41, 59, 0.3) !important;
+    background-color: #D4AF37 !important;
+    color: #1A365D !important;
 }

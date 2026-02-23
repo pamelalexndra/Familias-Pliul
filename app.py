@@ -33,7 +33,7 @@ cargar_css()
 # ============================================================
 st.markdown("""
 <div class="main-header">
-    <h1>👥 Formador de familiar PLIUL</h1>
+    <h1>👥 Formador de familias PLIUL</h1>
     <p>Genera grupos balanceados automáticamente considerando edad, carrera, género y restricciones personalizadas:D</p>
 </div>
 """, unsafe_allow_html=True)
@@ -314,10 +314,10 @@ if df_participantes is not None and len(df_participantes) > 0:
         n_grupos = st.number_input("¿Cuántos grupos?", min_value=2,
                                    max_value=len(df_participantes)//2,
                                    value=min(6, len(df_participantes)//5), step=1)
-        st.markdown("**🏅 Líderes** — Personas que deben quedar en grupos distintos")
+        st.markdown("**🏅 Restricciones** — Personas que deben quedar en grupos distintos")
         lideres = st.multiselect("Líderes", options=nombres_disponibles,
                                  max_selections=n_grupos, label_visibility="collapsed",
-                                 placeholder="Selecciona los líderes...")
+                                 placeholder="Selecciona los participantes...")
 
     with col_r:
         st.markdown("**🚫 Pares prohibidos** — No pueden coincidir en el mismo grupo")
@@ -379,68 +379,51 @@ if df_participantes is not None and len(df_participantes) > 0:
     # ============================================================
     # PASO 4: RESULTADOS
     # ============================================================
-    if "mejores" in st.session_state and st.session_state.mejores:
-        mejores     = st.session_state.mejores
-        df_res      = st.session_state.df_result
-        lideres_res = st.session_state.get("lideres", [])
+    # Reemplaza el bloque de resultados (Paso 4) por este:
+if "mejores" in st.session_state and st.session_state.mejores:
+    mejores = st.session_state.mejores
+    df_res = st.session_state.df_result
+    lideres_res = st.session_state.get("lideres", [])
 
-        st.markdown("""
-        <div class="section-card">
-            <div class="step-badge">Resultado</div>
-            <h2 class="section-title">Grupos generados</h2>
-        """, unsafe_allow_html=True)
+    st.markdown('<div class="section-card"><div class="section-title">Resultados de Optimización</div>', unsafe_allow_html=True)
+    
+    tabs = st.tabs([f"Configuración {i+1}" for i in range(len(mejores))])
+    
+    for tab, grupos in zip(tabs, mejores):
+        with tab:
+            n_cols = 3 
+            cols = st.columns(n_cols)
+            
+            for i, g_indices in enumerate(grupos):
+                g = df_res.loc[g_indices]
+                h = (g["Sexo"] == "Hombre").sum()
+                m = (g["Sexo"] == "Mujer").sum()
+                prom = g["Edad"].mean()
+                unic = g["Carrera"].nunique()
 
-        if len(mejores) > 1:
-            st.info(f"Se encontraron **{len(mejores)} configuraciones distintas** con la misma calidad óptima. Elige la que prefieras.")
+                filas_html = ""
+                for _, p in g.iterrows():
+                    sex_class = "badge-hombre" if p["Sexo"]=="Hombre" else "badge-mujer"
+                    lider_html = '<span class="lider-badge">LÍDER</span>' if p["Nombre"] in lideres_res else ""
+                    filas_html += f"""
+                    <tr>
+                        <td>{p['Nombre']} {lider_html}</td>
+                        <td class="{sex_class}">{p['Sexo'][0]}</td>
+                        <td>{int(p['Edad'])}</td>
+                    </tr>"""
 
-        tabs = st.tabs([f"Opción {i+1}" for i in range(len(mejores))]) if len(mejores) > 1 else [st.container()]
-
-        for tab, grupos in zip(tabs, mejores):
-            with tab:
-                cols = st.columns(min(3, int(n_grupos)))
-                for i, g_indices in enumerate(grupos):
-                    g    = df_res.loc[g_indices]
-                    h    = (g["Sexo"] == "Hombre").sum()
-                    m    = (g["Sexo"] == "Mujer").sum()
-                    prom = g["Edad"].mean()
-                    vari = g["Edad"].var()
-                    unic = g["Carrera"].nunique()
-
-                    filas_html = ""
-                    for _, p in g.iterrows():
-                        badge = f'<span class="badge-{"hombre" if p["Sexo"]=="Hombre" else "mujer"}">{p["Sexo"]}</span>'
-                        lider = f'<span class="lider-badge">⭐ Líder</span>' if p["Nombre"] in lideres_res else ""
-                        filas_html += f"""<tr>
-                            <td>{p['Nombre']}{lider}</td>
-                            <td>{badge}</td>
-                            <td style="color:#888">{int(p['Edad'])}</td>
-                            <td style="color:#666">{p['Carrera']}</td>
-                        </tr>"""
-
-                    with cols[i % len(cols)]:
-                        st.markdown(f"""
-                        <div class="familia-card">
-                            <div class="familia-titulo">Familia {i+1}</div>
-                            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem;">
-                                <span class="meta-chip">♂/♀ {h}H·{m}M</span>
-                                <span class="meta-chip">🎂 {prom:.1f} años</span>
-                                <span class="meta-chip">🎓 {unic} carreras</span>
-                            </div>
-                            <table class="personas-table">
-                                <thead><tr>
-                                    <th>Nombre</th><th>Sexo</th><th>Edad</th><th>Carrera</th>
-                                </tr></thead>
-                                <tbody>{filas_html}</tbody>
-                            </table>
-                        </div>""", unsafe_allow_html=True)
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        excel_buf = generar_excel_resultados(df_res, mejores, lideres_res)
-        st.download_button(
-            "⬇️  Descargar resultados en Excel",
-            data=excel_buf,
-            file_name="grupos_resultado.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            use_container_width=True,
-        )
+                with cols[i % n_cols]:
+                    st.markdown(f"""
+                    <div class="familia-card">
+                        <div class="familia-titulo">FAMILIA {i+1}</div>
+                        <div style="text-align:center; margin-bottom:8px;">
+                            <span class="meta-chip">H/M: {h}/{m}</span>
+                            <span class="meta-chip">Prom: {prom:.1f}</span>
+                            <span class="meta-chip">Carreras: {unic}</span>
+                        </div>
+                        <table class="personas-table">
+                            <thead><tr><th>Nombre</th><th>S</th><th>E</th></tr></thead>
+                            <tbody>{filas_html}</tbody>
+                        </table>
+                    </div>""", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
