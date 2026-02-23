@@ -23,7 +23,7 @@ def cargar_css(ruta_css="styles.css", ruta_foto="foto_pliul.png"):
         css = f.read().replace("__FOTO_BANNER__", foto_data)
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-cargar_css()
+# cargar_css()
 
 if "modo" not in st.session_state:
     st.session_state.modo = "archivo"
@@ -248,6 +248,8 @@ if st.session_state.modo == "archivo":
             pass
     with col_up:
         archivo = st.file_uploader("Sube tu Excel", type=["xlsx"], label_visibility="collapsed")
+        if archivo:
+            st.write("Archivo detectado")
 
     if archivo:
         try:
