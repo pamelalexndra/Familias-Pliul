@@ -23,7 +23,7 @@ def cargar_css(ruta_css="styles.css", ruta_foto="foto_pliul.png"):
         css = f.read().replace("__FOTO_BANNER__", foto_data)
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-# cargar_css()
+cargar_css()
 
 if "modo" not in st.session_state:
     st.session_state.modo = "archivo"
@@ -255,14 +255,11 @@ if st.session_state.modo == "archivo":
         try:
             df_leido = pd.read_excel(archivo)
             df_leido.columns = df_leido.columns.str.strip()
-            df_leido = df_leido.dropna(subset=["Nombre"])
+            df_leido = df_leido[df_leido["Nombre"].astype(str).str.strip() != ""]
             df_leido["Nombre"] = df_leido["Nombre"].str.strip()
-            df_leido = df_leido[df_leido["Nombre"].str.lower() != "nombre"]
-            df_leido = df_leido[df_leido["Nombre"].str.lower() != "nombre apellido apellido"]
-            df_leido["Sexo"]    = df_leido["Sexo"].str.strip().str.capitalize()  
-            df_leido["Carrera"] = df_leido["Carrera"].str.strip()                
-            df_leido = df_leido[df_leido["Nombre"].str.lower() != "nombre"]
-            df_leido = df_leido[df_leido["Nombre"].str.lower() != "nombre apellido apellido"]
+            for col in ["Nombre", "Sexo", "Carrera"]:
+                if col in df_leido.columns:
+                    df_leido[col] = df_leido[col].astype(str).str.strip()
 
             cols_req = {"Nombre", "Sexo", "Edad", "Carrera"}
             if not cols_req.issubset(df_leido.columns):
