@@ -184,7 +184,7 @@ def generar_excel_resultados(df, mejores_resultados, lideres):
             t.alignment = Alignment(horizontal="left", vertical="center")
             ws.row_dimensions[fila].height = 22
             fila += 1
-            for col, hdr in enumerate(["Nombre","Sexo","Edad","Carrera","Rol"], 1):
+            for col, hdr in enumerate(["Nombre","Sexo","Edad","Carrera"], 1):
                 cell = ws.cell(row=fila, column=col, value=hdr)
                 cell.font      = Font(bold=True, name="Calibri", size=10, color="444444")
                 cell.fill      = PatternFill("solid", start_color=AZUL_CL)
@@ -192,9 +192,8 @@ def generar_excel_resultados(df, mejores_resultados, lideres):
                 cell.border    = borde
             fila += 1
             for _, persona in g.iterrows():
-                rol = "Lider" if persona["Nombre"] in lideres else "Miembro"
                 for col, val in enumerate(
-                    [persona["Nombre"], persona["Sexo"], persona["Edad"], persona["Carrera"], rol], 1
+                    [persona["Nombre"], persona["Sexo"], persona["Edad"], persona["Carrera"]], 1
                 ):
                     cell = ws.cell(row=fila, column=col, value=val)
                     cell.font      = Font(name="Calibri", size=10)
