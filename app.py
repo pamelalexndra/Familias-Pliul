@@ -317,7 +317,7 @@ if df_participantes is not None and len(df_participantes) > 0:
             max_value=len(df_participantes) // 2,
             value=min(6, len(df_participantes) // 5), step=1,
         )
-        st.markdown("**Restricciones** — Deben quedar en grupos distintos")
+        st.markdown("**Restricciones** — Personas que deben quedar en grupos distintos")
         lideres = st.multiselect(
             "Líderes", options=nombres_disponibles,
             max_selections=n_grupos, label_visibility="collapsed",
@@ -361,7 +361,7 @@ if df_participantes is not None and len(df_participantes) > 0:
 
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
-        if st.button("🚀  Generar familias óptimas", use_container_width=True):
+        if st.button("Generar familias", use_container_width=True):
             if len(df_participantes) < n_grupos:
                 st.error("Hay menos participantes que grupos.")
             elif len(lideres) > n_grupos:
