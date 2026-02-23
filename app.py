@@ -15,26 +15,190 @@ from openpyxl.utils import get_column_letter
 # ============================================================
 st.set_page_config(
     page_title="Formador de Grupos",
-    page_icon="🫶",
+    page_icon="👥",
     layout="wide",
 )
 
 # ============================================================
 # CSS PERSONALIZADO
 # ============================================================
-def cargar_css(ruta="styles.css"):
-    with open(ruta) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap');
 
-cargar_css()
+html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
+
+.stApp { background-color: #F7F5F2; }
+
+#MainMenu, footer, header { visibility: hidden; }
+
+.main-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 20px;
+    padding: 40px 48px;
+    margin-bottom: 32px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+.main-header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(229,160,80,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.main-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    margin: 0 0 8px 0;
+}
+.main-header p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+    font-weight: 300;
+}
+
+.section-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.step-badge {
+    display: inline-block;
+    background: #1a1a2e;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+.section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #1a1a2e;
+    margin: 0 0 4px 0;
+}
+.section-subtitle {
+    color: #888;
+    font-size: 0.9rem;
+    margin: 0 0 24px 0;
+}
+
+.familia-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,0.07);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 16px;
+}
+.familia-titulo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    color: #1a1a2e;
+    margin: 0 0 6px 0;
+}
+.familia-meta {
+    font-size: 0.8rem;
+    color: #999;
+    margin: 0 0 14px 0;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.meta-chip {
+    background: #F0EDE8;
+    border-radius: 20px;
+    padding: 2px 10px;
+    color: #555;
+    font-weight: 500;
+}
+
+.personas-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.personas-table th {
+    text-align: left;
+    color: #aaa;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0 8px 8px 8px;
+    border-bottom: 1px solid #eee;
+}
+.personas-table td {
+    padding: 7px 8px;
+    color: #333;
+    border-bottom: 1px solid #f5f5f5;
+    vertical-align: middle;
+}
+.personas-table tr:last-child td { border-bottom: none; }
+
+.badge-hombre {
+    background: #EBF5FB; color: #2980B9;
+    border-radius: 20px; padding: 2px 9px;
+    font-size: 0.75rem; font-weight: 600;
+}
+.badge-mujer {
+    background: #FDEDEC; color: #C0392B;
+    border-radius: 20px; padding: 2px 9px;
+    font-size: 0.75rem; font-weight: 600;
+}
+.lider-badge {
+    background: #FEF9E7; color: #D4AC0D;
+    border-radius: 20px; padding: 1px 8px;
+    font-size: 0.72rem; font-weight: 600;
+    margin-left: 6px;
+}
+
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    padding: 12px 0 !important;
+}
+
+.stTabs [data-baseweb="tab-list"] {
+    background: #F0EDE8;
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+}
+.stTabs [data-baseweb="tab"] {
+    border-radius: 9px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 500 !important;
+    color: #888 !important;
+}
+.stTabs [aria-selected="true"] {
+    background: white !important;
+    color: #1a1a2e !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ============================================================
 # HEADER
 # ============================================================
 st.markdown("""
 <div class="main-header">
-    <h1>👥 Formador de familias PLIUL</h1>
-    <p>Genera grupos balanceados automáticamente considerando edad, carrera, género y restricciones personalizadas:D</p>
+    <h1>👥 Formador de Grupos</h1>
+    <p>Genera grupos balanceados automáticamente considerando edad, carrera, género y restricciones personalizadas.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -314,10 +478,10 @@ if df_participantes is not None and len(df_participantes) > 0:
         n_grupos = st.number_input("¿Cuántos grupos?", min_value=2,
                                    max_value=len(df_participantes)//2,
                                    value=min(6, len(df_participantes)//5), step=1)
-        st.markdown("**🏅 Restricciones** — Personas que deben quedar en grupos distintos")
+        st.markdown("**🏅 Líderes** — Personas que deben quedar en grupos distintos")
         lideres = st.multiselect("Líderes", options=nombres_disponibles,
                                  max_selections=n_grupos, label_visibility="collapsed",
-                                 placeholder="Selecciona los participantes...")
+                                 placeholder="Selecciona los líderes...")
 
     with col_r:
         st.markdown("**🚫 Pares prohibidos** — No pueden coincidir en el mismo grupo")
@@ -379,51 +543,69 @@ if df_participantes is not None and len(df_participantes) > 0:
     # ============================================================
     # PASO 4: RESULTADOS
     # ============================================================
-    # Reemplaza el bloque de resultados (Paso 4) por este:
-if "mejores" in st.session_state and st.session_state.mejores:
-    mejores = st.session_state.mejores
-    df_res = st.session_state.df_result
-    lideres_res = st.session_state.get("lideres", [])
+    if "mejores" in st.session_state and st.session_state.mejores:
+        mejores     = st.session_state.mejores
+        df_res      = st.session_state.df_result
+        lideres_res = st.session_state.get("lideres", [])
 
-    st.markdown('<div class="section-card"><div class="section-title">Resultados de Optimización</div>', unsafe_allow_html=True)
-    
-    tabs = st.tabs([f"Configuración {i+1}" for i in range(len(mejores))])
-    
-    for tab, grupos in zip(tabs, mejores):
-        with tab:
-            n_cols = 3 
-            cols = st.columns(n_cols)
-            
-            for i, g_indices in enumerate(grupos):
-                g = df_res.loc[g_indices]
-                h = (g["Sexo"] == "Hombre").sum()
-                m = (g["Sexo"] == "Mujer").sum()
-                prom = g["Edad"].mean()
-                unic = g["Carrera"].nunique()
+        st.markdown("""
+        <div class="section-card">
+            <div class="step-badge">Resultado</div>
+            <h2 class="section-title">Grupos generados</h2>
+        """, unsafe_allow_html=True)
 
-                filas_html = ""
-                for _, p in g.iterrows():
-                    sex_class = "badge-hombre" if p["Sexo"]=="Hombre" else "badge-mujer"
-                    lider_html = '<span class="lider-badge">LÍDER</span>' if p["Nombre"] in lideres_res else ""
-                    filas_html += f"""
-                    <tr>
-                        <td>{p['Nombre']} {lider_html}</td>
-                        <td class="{sex_class}">{p['Sexo'][0]}</td>
-                        <td>{int(p['Edad'])}</td>
-                    </tr>"""
+        if len(mejores) > 1:
+            st.info(f"Se encontraron **{len(mejores)} configuraciones distintas** con la misma calidad óptima. Elige la que prefieras.")
 
-                with cols[i % n_cols]:
-                    st.markdown(f"""
-                    <div class="familia-card">
-                        <div class="familia-titulo">FAMILIA {i+1}</div>
-                        <div style="text-align:center; margin-bottom:8px;">
-                            <span class="meta-chip">H/M: {h}/{m}</span>
-                            <span class="meta-chip">Prom: {prom:.1f}</span>
-                            <span class="meta-chip">Carreras: {unic}</span>
-                        </div>
-                        <table class="personas-table">
-                            <thead><tr><th>Nombre</th><th>S</th><th>E</th></tr></thead>
-                            <tbody>{filas_html}</tbody>
-                        </table>
-                    </div>""", unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+        tabs = st.tabs([f"Opción {i+1}" for i in range(len(mejores))]) if len(mejores) > 1 else [st.container()]
+
+        for tab, grupos in zip(tabs, mejores):
+            with tab:
+                cols = st.columns(min(3, int(n_grupos)))
+                for i, g_indices in enumerate(grupos):
+                    g    = df_res.loc[g_indices]
+                    h    = (g["Sexo"] == "Hombre").sum()
+                    m    = (g["Sexo"] == "Mujer").sum()
+                    prom = g["Edad"].mean()
+                    vari = g["Edad"].var()
+                    unic = g["Carrera"].nunique()
+
+                    filas_html = ""
+                    for _, p in g.iterrows():
+                        badge = f'<span class="badge-{"hombre" if p["Sexo"]=="Hombre" else "mujer"}">{p["Sexo"]}</span>'
+                        lider = f'<span class="lider-badge">⭐ Líder</span>' if p["Nombre"] in lideres_res else ""
+                        filas_html += f"""<tr>
+                            <td>{p['Nombre']}{lider}</td>
+                            <td>{badge}</td>
+                            <td style="color:#888">{int(p['Edad'])}</td>
+                            <td style="color:#666">{p['Carrera']}</td>
+                        </tr>"""
+
+                    with cols[i % len(cols)]:
+                        st.markdown(f"""
+                        <div class="familia-card">
+                            <p class="familia-titulo">Familia {i+1}</p>
+                            <div class="familia-meta">
+                                <span class="meta-chip">👥 {h}H / {m}M</span>
+                                <span class="meta-chip">🎂 Prom. {prom:.1f}</span>
+                                <span class="meta-chip">📊 Var. {vari:.2f}</span>
+                                <span class="meta-chip">🎓 {unic}/{len(g)} carreras únicas</span>
+                            </div>
+                            <table class="personas-table">
+                                <thead><tr>
+                                    <th>Nombre</th><th>Sexo</th><th>Edad</th><th>Carrera</th>
+                                </tr></thead>
+                                <tbody>{filas_html}</tbody>
+                            </table>
+                        </div>""", unsafe_allow_html=True)
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        excel_buf = generar_excel_resultados(df_res, mejores, lideres_res)
+        st.download_button(
+            "⬇️  Descargar resultados en Excel",
+            data=excel_buf,
+            file_name="grupos_resultado.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            use_container_width=True,
+        )
