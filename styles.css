@@ -1,147 +1,79 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Open+Sans:wght@400;600&display=swap');
-
-/* Paleta: Azul (#1A365D), Dorado (#D4AF37), Blanco (#FFFFFF) */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
 
 .stApp {
-    background: radial-gradient(circle at top right, #fdfdfd, #f0f4f8);
+    background-color: #ffffff !important;
 }
 
-/* Reducir espacios en blanco de Streamlit */
-.block-container {
-    padding-top: 1.5rem !important;
-    padding-bottom: 0rem !important;
-    max-width: 95% !important;
+html, body, [class*="st-"] { 
+    font-family: 'Plus Jakarta Sans', sans-serif !important; 
+    color: #0f172a !important;
 }
 
-/* Header Compacto y Elegante */
 .main-header {
-    background: #1A365D;
-    border-bottom: 4px solid #D4AF37;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(26, 54, 93, 0.2);
+    padding: 2rem 0;
+    border-bottom: 2px solid #f1f5f9;
+    margin-bottom: 3rem;
 }
 
 .main-header h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.8rem !important;
     font-weight: 800;
-    margin: 0;
-    color: #D4AF37;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-size: 3rem !important;
+    letter-spacing: -1.5px;
+    color: #1e3a8a; 
+    margin-bottom: 0.5rem;
 }
 
-/* Tarjetas de Sección Compactas */
-.section-card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 1.2rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+.main-header p {
+    font-size: 1.2rem;
+    color: #64748b;
 }
 
 .section-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1A365D;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: #1e3a8a;
+    border-left: 5px solid #d4af37; 
+    margin: 2rem 0 1.5rem 0;
 }
 
-.section-title::before {
-    content: '';
-    width: 4px;
-    height: 18px;
-    background: #D4AF37;
-    border-radius: 2px;
-}
-
-/* Tabla de Grupos Estilo Moderno */
 .familia-card {
-    background: #ffffff;
-    border: 1px solid #d4af3744;
-    border-top: 3px solid #D4AF37;
-    border-radius: 4px;
-    padding: 12px;
-    margin-bottom: 10px;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
 }
 
 .familia-titulo {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.95rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.badge-label {
+    padding: 4px 12px;
+    border-radius: 6px;
     font-weight: 700;
-    color: #1A365D;
-    margin-bottom: 8px;
-    text-align: center;
-    background: #f8f9fa;
-    padding: 5px;
-    border-radius: 4px;
-}
-
-.meta-chip {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 0.7rem;
-    background: #1A365D;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-right: 4px;
-}
-
-/* Estilo de tablas internas */
-.personas-table {
-    width: 100%;
-    border-collapse: collapse;
     font-size: 0.8rem;
-    margin-top: 8px;
-}
-
-.personas-table th {
-    background: #f1f5f9;
-    color: #475569;
-    text-align: left;
-    padding: 4px 8px;
-    border-bottom: 1px solid #cbd5e1;
-}
-
-.personas-table td {
-    padding: 4px 8px;
-    border-bottom: 1px dotted #e2e8f0;
-}
-
-/* Badges */
-.badge-hombre { color: #1e40af; font-weight: bold; }
-.badge-mujer { color: #be123c; font-weight: bold; }
-.lider-badge { 
-    background: #D4AF37; 
-    color: #1A365D; 
-    padding: 1px 5px; 
-    border-radius: 3px; 
-    font-size: 0.65rem; 
-    font-weight: bold;
-}
-
-/* Botones Primary */
-.stButton > button[kind="primary"] {
-    background-color: #1A365D !important;
-    color: #D4AF37 !important;
-    border: 2px solid #D4AF37 !important;
-    width: 100%;
-    font-weight: 700 !important;
     text-transform: uppercase;
 }
+.badge-hombre { background: #dbeafe; color: #1e40af; }
+.badge-mujer { background: #fce7f3; color: #9d174d; }
 
-.stButton > button[kind="primary"]:hover {
-    background-color: #D4AF37 !important;
-    color: #1A365D !important;
+.stButton > button {
+    height: 3.5rem !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    background-color: #1e3a8a !important; 
+    color: #ffffff !important;
+    border: none !important;
+    transition: all 0.2s;
+}
+
+.stButton > button:hover {
+    background-color: #d4af37 !important; 
+    color: #1e3a8a !important;
+    transform: translateY(-2px);
 }
