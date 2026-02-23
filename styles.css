@@ -22,7 +22,12 @@
 .hero-banner {
     width: 100vw;
     height: 400px;
-    background-image: linear-gradient(rgba(0,8,20,0.15), rgba(0,8,20,1)),
+    background-image: linear-gradient(
+                          to bottom,
+                          rgba(0,8,20,0.05) 0%,
+                          rgba(0,8,20,0.05) 65%,
+                          rgba(0,8,20,1)    100%
+                      ),
                       url('__FOTO_BANNER__');
     background-size: cover;
     background-position: center top;
@@ -93,7 +98,7 @@
 }
 
 .stButton > button:hover {
-    background-color: #ffffff !important;
+    background-color: #d4af37 !important;
     color: white !important;
 }
 
@@ -127,6 +132,18 @@
 .stDataFrame {
     border-radius: 10px;
     overflow: hidden;
+}
+
+.stDataFrame > div:first-child,
+[data-testid="stDataFrame"] > div:first-child,
+[data-testid="stDataFrameResizable"] {
+    border-top: none !important;
+    box-shadow: none !important;
+}
+
+.stDataFrame iframe,
+[data-testid="stDataFrame"] iframe {
+    border-top: none !important;
 }
 
 /* ============================================================
@@ -186,11 +203,21 @@
     border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
+.personas-table th:nth-child(3) {
+    text-align: center;
+}
+
 .personas-table td {
     padding: 8px;
     color: #e2e8f0;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     vertical-align: middle;
+}
+
+/* FIX 3: centrar números de edad */
+.personas-table td:nth-child(3) {
+    text-align: center;
+    color: #94a3b8;
 }
 
 .personas-table tr:last-child td {
@@ -218,6 +245,7 @@
     font-weight: 600;
 }
 
+/* lider-badge conservado por si se usa en otro lado, pero ya no se inyecta en las tablas */
 .lider-badge {
     background-color: rgba(212,175,55,0.15);
     color: #d4af37;
