@@ -105,8 +105,8 @@ button[kind="secondary"] {
 }
 
 .stButton > button:hover {
-    background-color: #ecf8b4 !important;
-    color: white !important;
+    background-color: #003089 !important;
+    color: rgb(0, 0, 0) !important;
 }
 
 .stDownloadButton > button {
@@ -330,4 +330,18 @@ hr {
 
 .stCaptionContainer {
     color: #475569 !important;
+}
+
+[data-testid="stButton"] button[kind="secondary"] {
+    padding: 0.2rem 0.6rem !important;
+    font-size: 1rem !important;
+    border-radius: 8px !important;
+    background-color: rgba(255,255,255,0.07) !important;
+    color: #94a3b8 !important;
+    width: 100% !important;
+}
+
+[data-testid="stButton"] button[kind="secondary"]:hover {
+    background-color: rgba(255,255,255,0.15) !important;
+    color: white !important;
 }

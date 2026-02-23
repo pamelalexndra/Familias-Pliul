@@ -417,17 +417,14 @@ if "mejores" in st.session_state and st.session_state.mejores:
             unsafe_allow_html=True
         )
 
-    # Si hay varias opciones, tabs de opciones; si solo una, contenedor simple
-    opciones_tabs = st.tabs([f"Opción {i+1}" for i in range(len(mejores))]) if len(mejores) > 1 else [st.container()]
+    tab_familias, tab_stats = st.tabs(["👨‍👩‍👧 Familias", "📊 Estadísticas"])
 
-    for op_tab, grupos in zip(opciones_tabs, mejores):
-        with op_tab:
+    # ── FAMILIAS ──────────────────────────────────────────
+    with tab_familias:
+        opciones_tabs = st.tabs([f"Opción {i+1}" for i in range(len(mejores))]) if len(mejores) > 1 else [st.container()]
 
-            # Tabs Familias / Estadísticas dentro de cada opción
-            tab_familias, tab_stats = st.tabs(["👨‍👩‍👧 Familias", "📊 Estadísticas"])
-
-            # ── FAMILIAS ──────────────────────────────────────────
-            with tab_familias:
+        for op_tab, grupos in zip(opciones_tabs, mejores):
+            with op_tab:
                 cols = st.columns(min(3, len(grupos)))
                 for i, g_indices in enumerate(grupos):
                     g    = df_res.loc[g_indices]
@@ -465,53 +462,61 @@ if "mejores" in st.session_state and st.session_state.mejores:
                                 <tbody>{filas_html}</tbody>
                             </table>
                         </div>""", unsafe_allow_html=True)
+                        with cols[i % len(cols)]:
+                            _, btn_col = st.columns([4, 1])
+                            with btn_col:
+                                if st.button("⛶", key=f"expand_{i}_{id(grupos)}", help="Ver familia completa"):
+                                    ver_familia(f"Familia {i+1}", filas_html, h, m, prom, vari, unic, len(g))
 
-                        if st.button("⛶ Ver completa", key=f"expand_{i}_{id(grupos)}"):
-                            ver_familia(f"Familia {i+1}", filas_html, h, m, prom, vari, unic, len(g))
+    st.markdown(f"""
+    <div class="familia-card">
+    ...
+    </div>""", unsafe_allow_html=True)
+    # ── ESTADÍSTICAS 
+    with tab_stats:
+        grupos_ref = mejores[0]
 
-            # ── ESTADÍSTICAS ──────────────────────────────────────
-            with tab_stats:
-                col1, col2, col3 = st.columns(3)
-                col1.metric("Total participantes", len(df_res))
-                col2.metric("Grupos", len(grupos))
-                col3.metric("Promedio por grupo", round(len(df_res) / len(grupos), 1))
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Total participantes", len(df_res))
+        col2.metric("Grupos", len(grupos_ref))
+        col3.metric("Promedio por grupo", round(len(df_res) / len(grupos_ref), 1))
 
-                st.write("---")
+        st.write("---")
 
-                cs, ce = st.columns(2)
-                with cs:
-                    st.markdown("**Distribución por sexo**")
-                    st.bar_chart(df_res["Sexo"].value_counts())
-                with ce:
-                    st.markdown("**Distribución de edades**")
-                    st.bar_chart(df_res["Edad"].value_counts().sort_index())
+        cs, ce = st.columns(2)
+        with cs:
+            st.markdown("**Distribución por sexo**")
+            st.bar_chart(df_res["Sexo"].value_counts())
+        with ce:
+            st.markdown("**Distribución de edades**")
+            st.bar_chart(df_res["Edad"].value_counts().sort_index())
 
-                st.markdown("**Hombres y mujeres por familia**")
-                resumen = []
-                for i, g_indices in enumerate(grupos):
-                    g = df_res.loc[g_indices]
-                    resumen.append({
-                        "Familia": f"Familia {i+1}",
-                        "Hombres": int((g["Sexo"] == "Hombre").sum()),
-                        "Mujeres": int((g["Sexo"] == "Mujer").sum()),
-                        "Edad promedio": round(g["Edad"].mean(), 1),
-                        "Varianza edad": round(g["Edad"].var(), 2),
-                        "Carreras únicas": int(g["Carrera"].nunique()),
-                    })
-                df_resumen = pd.DataFrame(resumen).set_index("Familia")
-                st.bar_chart(df_resumen[["Hombres", "Mujeres"]])
+        st.markdown("**Hombres y mujeres por familia**")
+        resumen = []
+        for i, g_indices in enumerate(grupos_ref):
+            g = df_res.loc[g_indices]
+            resumen.append({
+                "Familia": f"Familia {i+1}",
+                "Hombres": int((g["Sexo"] == "Hombre").sum()),
+                "Mujeres": int((g["Sexo"] == "Mujer").sum()),
+                "Edad promedio": round(g["Edad"].mean(), 1),
+                "Varianza edad": round(g["Edad"].var(), 2),
+                "Carreras únicas": int(g["Carrera"].nunique()),
+            })
+        df_resumen = pd.DataFrame(resumen).set_index("Familia")
+        st.bar_chart(df_resumen[["Hombres", "Mujeres"]])
 
-                st.markdown("**Resumen por familia**")
-                st.dataframe(df_resumen, use_container_width=True)
+        st.markdown("**Resumen por familia**")
+        st.dataframe(df_resumen, use_container_width=True)
 
-                st.markdown("**Carreras más frecuentes**")
-                st.dataframe(
-                    df_res["Carrera"].value_counts().reset_index().rename(
-                        columns={"index": "Carrera", "count": "Cantidad"}
-                    ),
-                    use_container_width=True,
-                    hide_index=True,
-                )
+        st.markdown("**Carreras más frecuentes**")
+        st.dataframe(
+            df_res["Carrera"].value_counts().reset_index().rename(
+                columns={"index": "Carrera", "count": "Cantidad"}
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
 
     st.write("---")
     c1, c2, c3 = st.columns([1, 2, 1])
