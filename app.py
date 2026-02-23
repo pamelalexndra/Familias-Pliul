@@ -265,7 +265,11 @@ if st.session_state.modo == "archivo":
                 df_participantes["Edad"] = df_participantes["Edad"].astype(int)
                 st.success(f"✅ {len(df_participantes)} participantes cargados.")
                 st.markdown('<div class="table-container">', unsafe_allow_html=True)
-                st.dataframe(df_participantes, use_container_width=True, hide_index=True)
+                st.dataframe(
+                df_participantes.style.set_properties(subset=["Edad"], **{"text-align": "center"}),
+                use_container_width=True,
+                hide_index=True
+                )
                 st.markdown('</div>', unsafe_allow_html=True)
         except Exception as e:
             st.error(f"Error al leer el archivo: {e}")
@@ -296,7 +300,11 @@ else:
             st.session_state.participantes = []
             st.rerun()
         st.markdown('<div class="table-container">', unsafe_allow_html=True)
-        st.dataframe(df_manual, use_container_width=True, hide_index=True)
+        st.dataframe(
+        df_participantes.style.set_properties(subset=["Edad"], **{"text-align": "center"}),
+        use_container_width=True,
+        hide_index=True
+        )
         st.markdown('</div>', unsafe_allow_html=True)
         df_participantes = df_manual.copy()
 
