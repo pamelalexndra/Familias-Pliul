@@ -10,7 +10,7 @@ from collections import Counter
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
-st.set_page_config(page_title="PLIUL - Formador de Familias", layout="wide")
+st.set_page_config(page_title="PLIUL - Formador de Familias", layout="centered")
 
 def cargar_css(ruta_css="styles.css", ruta_foto="foto_pliul.png"):
     try:
@@ -252,6 +252,7 @@ if st.session_state.modo == "archivo":
     if archivo:
         try:
             df_leido = pd.read_excel(archivo)
+            df_leido.columns = df_leido.columns.str.strip()
             df_leido = df_leido.dropna(subset=["Nombre"])
             df_leido["Nombre"] = df_leido["Nombre"].str.strip()
             df_leido = df_leido[df_leido["Nombre"].str.lower() != "nombre"]
