@@ -445,6 +445,11 @@ if "mejores" in st.session_state and st.session_state.mejores:
                         </tr>"""
 
                     with cols[i % len(cols)]:
+                        _, btn_col = st.columns([4, 1])
+                        with btn_col:
+                            if st.button("⛶", key=f"expand_{i}_{id(grupos)}", help="Ver familia completa"):
+                                ver_familia(f"Familia {i+1}", filas_html, h, m, prom, vari, unic, len(g))
+
                         st.markdown(f"""
                         <div class="familia-card">
                             <p class="familia-titulo">Familia {i+1}</p>
@@ -462,12 +467,7 @@ if "mejores" in st.session_state and st.session_state.mejores:
                                 <tbody>{filas_html}</tbody>
                             </table>
                         </div>""", unsafe_allow_html=True)
-                    with cols[i % len(cols)]:
-                        st.markdown('<div class="familia-wrapper">', unsafe_allow_html=True)
-                        st.markdown(f"""<div class="familia-card">...</div>""", unsafe_allow_html=True)
-                        if st.button("", key=f"expand_{i}_{id(grupos)}"):
-                            ver_familia(...)
-                        st.markdown('</div>', unsafe_allow_html=True)
+                        
     # ── ESTADÍSTICAS 
     with tab_stats:
         grupos_ref = mejores[0]
