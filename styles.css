@@ -392,6 +392,9 @@ hr {
     .hero-banner {
         height: 180px;  
     }
+    .banner-label {
+      height: 30px;
+    }
 }
 
 @media (max-width: 768px) {
