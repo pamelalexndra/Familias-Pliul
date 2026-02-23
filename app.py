@@ -253,56 +253,50 @@ if st.session_state.modo == "archivo":
 
     if archivo:
         try:
-            import unicodedata
-
             df_leido = pd.read_excel(archivo)
-
             df_leido.columns = df_leido.columns.astype(str).str.strip()
 
             cols_req = {"Nombre", "Sexo", "Edad", "Carrera"}
             if not cols_req.issubset(df_leido.columns):
-                st.error(f"El archivo debe tener exactamente estas columnas: {cols_req}")
+                st.error(f"El archivo debe tener estas columnas: {cols_req}")
                 st.stop()
 
-            def limpiar_texto(txt):
-                if pd.isna(txt):
-                    return ""
-                txt = unicodedata.normalize("NFKD", str(txt))
-                txt = txt.encode("ascii", "ignore").decode("utf-8")  # quita tildes
-                txt = txt.replace("\xa0", " ")  # elimina espacios invisibles
-                txt = txt.strip().lower()
-                return txt
-
+            # Limpiar todas las columnas de texto
             for col in ["Nombre", "Sexo", "Carrera"]:
                 df_leido[col] = df_leido[col].astype(str).str.strip()
 
-            df_leido = df_leido[df_leido["Nombre"].apply(limpiar_texto) != ""]
+            # Quitar filas vacías o de ejemplo
+            df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != ""]
+            df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != "nan"]
+            df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != "nombre"]
+            df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != "nombre apellido apellido"]
 
-            df_leido["Sexo"] = df_leido["Sexo"].str.capitalize()
+            # Normalizar Sexo
+            df_leido["Sexo"] = df_leido["Sexo"].str.strip().str.capitalize()
 
-            if not df_leido[df_leido["Sexo"].isin(["Hombre", "Mujer"])].all().all():
-                st.error("La columna 'Sexo' solo acepta exactamente 'Hombre' o 'Mujer'.")
+            # Validar Sexo
+            sexos_invalidos = df_leido[~df_leido["Sexo"].isin(["Hombre", "Mujer"])]
+            if not sexos_invalidos.empty:
+                st.error(f"Valores inválidos en Sexo: {sexos_invalidos['Sexo'].unique().tolist()}")
                 st.stop()
 
-            df_leido["Nombre_normalizado"] = df_leido["Nombre"].apply(limpiar_texto)
-
-            if df_leido["Nombre_normalizado"].duplicated().any():
-                duplicados = df_leido[
-                    df_leido["Nombre_normalizado"].duplicated(keep=False)
-                ]["Nombre"].unique()
-                st.error(f"Nombres duplicados detectados: {list(duplicados)}")
+            # Validar duplicados
+            nombres_lower = df_leido["Nombre"].str.lower().str.strip()
+            if nombres_lower.duplicated().any():
+                dupes = df_leido[nombres_lower.duplicated(keep=False)]["Nombre"].unique()
+                st.error(f"Nombres duplicados: {list(dupes)}")
                 st.stop()
 
-            df_participantes = df_leido[["Nombre", "Sexo", "Edad", "Carrera"]].copy()
-            df_participantes["Edad"] = pd.to_numeric(df_participantes["Edad"], errors="coerce")
-
-            if df_participantes["Edad"].isna().any():
+            # Validar edades
+            df_leido["Edad"] = pd.to_numeric(df_leido["Edad"], errors="coerce")
+            if df_leido["Edad"].isna().any():
                 st.error("Hay edades inválidas. Revisa que todas sean números.")
                 st.stop()
 
+            df_participantes = df_leido[["Nombre", "Sexo", "Edad", "Carrera"]].copy()
             df_participantes["Edad"] = df_participantes["Edad"].astype(int)
 
-            st.success(f"✅ {len(df_participantes)} participantes cargados correctamente.")
+            st.success(f"✅ {len(df_participantes)} participantes cargados.")
             st.dataframe(df_participantes, use_container_width=True, hide_index=True)
 
         except Exception as e:
