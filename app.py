@@ -375,31 +375,6 @@ if df_participantes is not None and len(df_participantes) > 0:
                 st.session_state.df_result = df_participantes
                 st.session_state.lideres   = lideres
 
-
-# ============================================================
-# DIALOG — debe estar en el nivel raíz del script
-# ============================================================
-@st.dialog("Detalle de familia", width="large")
-def ver_familia(titulo, filas_html, h, m, prom, vari, unic, total):
-    st.markdown(
-        f"<h3 style='color:white; font-family:Cormorant Garamond,serif; margin-bottom:12px'>{titulo}</h3>",
-        unsafe_allow_html=True
-    )
-    st.markdown(f"""
-    <div class="familia-meta">
-        <span class="meta-chip">👥 {h}H / {m}M</span>
-        <span class="meta-chip">🎂 Prom. {prom:.1f}</span>
-        <span class="meta-chip">📊 Var. {vari:.2f}</span>
-        <span class="meta-chip">🎓 {unic}/{total} únicas</span>
-    </div>
-    <table class="personas-table">
-        <thead><tr>
-            <th>Nombre</th><th>Sexo</th><th style="text-align:center">Edad</th><th>Carrera</th>
-        </tr></thead>
-        <tbody>{filas_html}</tbody>
-    </table>""", unsafe_allow_html=True)
-
-
 # ============================================================
 # PASO 5: RESULTADOS
 # ============================================================
@@ -445,10 +420,6 @@ if "mejores" in st.session_state and st.session_state.mejores:
                         </tr>"""
 
                     with cols[i % len(cols)]:
-                        _, btn_col = st.columns([4, 1])
-                        with btn_col:
-                            if st.button("⛶", key=f"expand_{i}_{id(grupos)}", help="Ver familia completa"):
-                                ver_familia(f"Familia {i+1}", filas_html, h, m, prom, vari, unic, len(g))
 
                         st.markdown(f"""
                         <div class="familia-card">
@@ -467,7 +438,7 @@ if "mejores" in st.session_state and st.session_state.mejores:
                                 <tbody>{filas_html}</tbody>
                             </table>
                         </div>""", unsafe_allow_html=True)
-                        
+
     # ── ESTADÍSTICAS 
     with tab_stats:
         grupos_ref = mejores[0]

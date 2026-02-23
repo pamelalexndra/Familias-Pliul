@@ -331,19 +331,3 @@ hr {
 .stCaptionContainer {
     color: #475569 !important;
 }
-
-.familia-card + div [data-testid="stButton"] button {
-    background-color: rgba(255,255,255,0.04) !important;
-    color: #475569 !important;
-    border-radius: 0 0 14px 14px !important;
-    border-top: 1px solid rgba(255,255,255,0.06) !important;
-    width: 100% !important;
-    font-size: 0.8rem !important;
-    padding: 0.4rem !important;
-    margin-top: -4px !important;
-}
-
-.familia-card + div [data-testid="stButton"] button:hover {
-    background-color: rgba(255,255,255,0.08) !important;
-    color: #94a3b8 !important;
-}
