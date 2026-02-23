@@ -105,12 +105,12 @@ button[kind="secondary"] {
 }
 
 .stButton > button:hover {
-    background-color: #c0ffb9 !important;
+    background-color: #ecf8b4 !important;
     color: white !important;
 }
 
 .stDownloadButton > button {
-    background-color: #ffffff !important;
+    background-color: #ab1b1b !important;
     color: #000814 !important;
     border-radius: 50px !important;
     padding: 0.75rem 2rem !important;
@@ -147,6 +147,10 @@ button[kind="secondary"] {
 }
 
 [data-testid="stElementToolbar"] {
+    display: none !important;
+}
+
+[data-testid="stDecoration"] {
     display: none !important;
 }
 

@@ -424,22 +424,18 @@ if df_participantes is not None and len(df_participantes) > 0:
                         </tr>"""
 
                     with cols[i % len(cols)]:
-                        st.markdown(f"""
-                        <div class="familia-card">
-                            <p class="familia-titulo">Familia {i+1}</p>
+                        with st.expander(f"Familia {i+1}  •  {h}H / {m}M  •  Prom. {prom:.1f}", expanded=True):
+                            st.markdown(f"""
                             <div class="familia-meta">
-                                <span class="meta-chip">👥 {h}H / {m}M</span>
-                                <span class="meta-chip">🎂 Edad promedio {prom:.1f}</span>
                                 <span class="meta-chip">📊 Var. {vari:.2f}</span>
-                                <span class="meta-chip">🎓 {unic}/{len(g)} carreras únicas</span>
+                                <span class="meta-chip">🎓 {unic}/{len(g)} únicas</span>
                             </div>
                             <table class="personas-table">
                                 <thead><tr>
                                     <th>Nombre</th><th>Sexo</th><th>Edad</th><th>Carrera</th>
                                 </tr></thead>
                                 <tbody>{filas_html}</tbody>
-                            </table>
-                        </div>""", unsafe_allow_html=True)
+                            </table>""", unsafe_allow_html=True)
 
         st.write("---")
         c1, c2, c3 = st.columns([1, 2, 1])
