@@ -371,7 +371,7 @@ hr {
         overflow-x: auto !important;
         flex-wrap: nowrap !important;
         border-radius: 12px !important;
-        justify-content: flex-start !important;
+        justify-content: center !important;
     }
 
     .stTabs [data-baseweb="tab"] {
@@ -385,5 +385,16 @@ hr {
 @media (max-width: 768px) {
     .botones-modo {
         display: none !important;
+    }
+}
+
+.hero-banner {
+    background-position: center center;  
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        height: 250px;                       
+        background-position: center top;     
     }
 }

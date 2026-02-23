@@ -500,7 +500,7 @@ if "mejores" in st.session_state and st.session_state.mejores:
                 edad_counts = df_res["Edad"].value_counts().sort_index().reset_index()
                 edad_counts.columns = ["Edad", "Cantidad"]
                 fig_edad = px.bar(edad_counts, x="Edad", y="Cantidad",
-                                color_discrete_sequence=["#a5b4fc"])
+                                color_discrete_sequence=["#2326da"])
                 fig_edad.update_layout(
                     paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
                     font_color="white", showlegend=False
