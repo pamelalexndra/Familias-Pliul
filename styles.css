@@ -106,7 +106,7 @@ button[kind="secondary"] {
 
 .stButton > button:hover {
     background-color: #003089 !important;
-    color: rgb(0, 0, 0) !important;
+    color: rgb(255, 255, 255) !important;
 }
 
 .stDownloadButton > button {
