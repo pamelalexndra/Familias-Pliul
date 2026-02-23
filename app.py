@@ -265,6 +265,21 @@ if st.session_state.modo == "archivo":
             for col in ["Nombre", "Sexo", "Carrera"]:
                 df_leido[col] = df_leido[col].astype(str).str.strip()
 
+            df_leido = df_leido[df_leido["Nombre"].str.lower() != ""]
+            st.write("2. Tras quitar vacíos:", len(df_leido))
+
+            df_leido = df_leido[df_leido["Nombre"].str.lower() != "nan"]
+            st.write("3. Tras quitar nan:", len(df_leido))
+
+            df_leido = df_leido[df_leido["Nombre"].str.lower() != "nombre"]
+            st.write("4. Tras quitar 'nombre':", len(df_leido))
+
+            df_leido = df_leido[df_leido["Nombre"].str.lower() != "nombre apellido apellido"]
+            st.write("5. Tras quitar ejemplo:", len(df_leido))
+
+            st.write("Valores únicos de Sexo:", df_leido["Sexo"].unique().tolist())
+            st.dataframe(df_leido.head(10))
+
             # Quitar filas vacías o de ejemplo
             df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != ""]
             df_leido = df_leido[df_leido["Nombre"].str.lower().str.strip() != "nan"]
