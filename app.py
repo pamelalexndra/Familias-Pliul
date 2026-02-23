@@ -12,6 +12,8 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
 st.set_page_config(page_title="PLIUL - Formador de Familias", layout="wide")
 
+tab_familias, tab_stats = st.tabs(["👨‍👩‍👧 Familias", "📊 Estadísticas"])
+
 def cargar_css(ruta_css="styles.css", ruta_foto="foto_pliul.png"):
     try:
         with open(ruta_foto, "rb") as f:
@@ -240,7 +242,7 @@ if st.session_state.modo == "archivo":
         try:
             with open("plantilla_participantes.xlsx", "rb") as f:
                 st.download_button(
-                    "⬇️ Descargar plantilla", data=f,
+                    "Descargar plantilla", data=f,
                     file_name="plantilla_participantes.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 )
@@ -400,10 +402,10 @@ def ver_familia(titulo, filas_html, h, m, prom, vari, unic, total):
         <tbody>{filas_html}</tbody>
     </table>""", unsafe_allow_html=True)
 
-    # ============================================================
-    # PASO 5: RESULTADOS
-    # ============================================================
-    if "mejores" in st.session_state and st.session_state.mejores:
+# ============================================================
+# PASO 5: RESULTADOS
+# ============================================================
+if "mejores" in st.session_state and st.session_state.mejores:
         mejores     = st.session_state.mejores
         df_res      = st.session_state.df_result
         lideres_res = st.session_state.get("lideres", [])
@@ -471,3 +473,30 @@ def ver_familia(titulo, filas_html, h, m, prom, vari, unic, total):
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 use_container_width=True,
             )
+
+with tab_stats:
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total participantes", len(df_res))
+    col2.metric("Grupos", len(grupos))
+    col3.metric("Promedio por grupo", round(len(df_res) / len(grupos), 1))
+
+    st.write("---")
+
+    # Distribución por sexo
+    st.markdown("**Distribución por sexo**")
+    sexo_counts = df_res["Sexo"].value_counts().reset_index()
+    st.bar_chart(sexo_counts.set_index("Sexo"))
+
+    # Distribución de edades
+    st.markdown("**Distribución de edades**")
+    st.bar_chart(df_res["Edad"].value_counts().sort_index())
+
+    # Carreras más frecuentes
+    st.markdown("**Carreras**")
+    st.dataframe(
+        df_res["Carrera"].value_counts().reset_index().rename(
+            columns={"index": "Carrera", "Carrera": "Cantidad"}
+        ),
+        use_container_width=True,
+        hide_index=True
+    )
