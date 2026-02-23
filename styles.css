@@ -86,6 +86,12 @@
 /* ============================================================
    BOTONES PILL
    ============================================================ */
+/* En styles.css, agrega esto */
+button[kind="secondary"] {
+    padding: 0.2rem 0.5rem !important;
+    font-size: 0.7rem !important;
+}
+
 .stButton > button {
     background-color: white !important;
     color: #000814 !important;
@@ -140,6 +146,10 @@
     overflow: hidden;
 }
 
+[data-testid="stDataFrameToolbar"] {
+    display: none !important;
+}
+
 .stDataFrame > div:first-child,
 [data-testid="stDataFrame"] > div:first-child,
 [data-testid="stDataFrameResizable"] {
@@ -165,7 +175,7 @@
 
 .familia-titulo {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
+    font-size: 3rem;
     color: white;
     margin: 0 0 8px 0;
     font-weight: 600;
@@ -281,7 +291,7 @@
     padding: 4px 6px;
     gap: 4px;
     border: 1px solid rgba(255,255,255,0.07);
-    position: center;
+    justify-content: center;
 }
 
 .stTabs [data-baseweb="tab"] {

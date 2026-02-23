@@ -329,7 +329,7 @@ if df_participantes is not None and len(df_participantes) > 0:
         lideres = st.multiselect(
             "Líderes", options=nombres_disponibles,
             max_selections=n_grupos, label_visibility="collapsed",
-            placeholder="Selecciona los líderes...",
+            placeholder="Selecciona...",
         )
 
     with col_r:
@@ -347,8 +347,8 @@ if df_participantes is not None and len(df_participantes) > 0:
                     st.session_state.pares.append((par1, par2))
         if st.session_state.pares:
             for idx, (p1, p2) in enumerate(st.session_state.pares):
-                cp, cx = st.columns([5, 1])
-                cp.markdown(f"<small style='color:#94a3b8'>🚫 {p1} ↔ {p2}</small>", unsafe_allow_html=True)
+                cp, cx = st.columns([8, 1])
+                cp.markdown(f"<span style='color:#94a3b8'>🚫 {p1} ↔ {p2}</span>", unsafe_allow_html=True)
                 if cx.button("✕", key=f"del_{idx}"):
                     st.session_state.pares.pop(idx)
                     st.rerun()
@@ -395,8 +395,10 @@ if df_participantes is not None and len(df_participantes) > 0:
         st.markdown('<h2 class="section-heading">Familias generadas</h2>', unsafe_allow_html=True)
 
         if len(mejores) > 1:
-            st.info(f"Se encontraron **{len(mejores)} configuraciones distintas** con la misma calidad óptima.")
-
+            st.markdown(
+                f"<p style='text-align:center; color:#94a3b8'>Se encontraron <b>{len(mejores)}</b> configuraciones distintas con la misma calidad óptima.</p>",
+                unsafe_allow_html=True
+            )
         tabs = st.tabs([f"Opción {i+1}" for i in range(len(mejores))]) if len(mejores) > 1 else [st.container()]
 
         for tab, grupos in zip(tabs, mejores):
@@ -426,9 +428,9 @@ if df_participantes is not None and len(df_participantes) > 0:
                             <p class="familia-titulo">Familia {i+1}</p>
                             <div class="familia-meta">
                                 <span class="meta-chip">👥 {h}H / {m}M</span>
-                                <span class="meta-chip">🎂 Prom. {prom:.1f}</span>
+                                <span class="meta-chip">🎂 Edad promedio {prom:.1f}</span>
                                 <span class="meta-chip">📊 Var. {vari:.2f}</span>
-                                <span class="meta-chip">🎓 {unic}/{len(g)} únicas</span>
+                                <span class="meta-chip">🎓 {unic}/{len(g)} carreras únicas</span>
                             </div>
                             <table class="personas-table">
                                 <thead><tr>
