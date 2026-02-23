@@ -244,7 +244,7 @@ st.write("---")
 df_participantes = None
 
 if st.session_state.modo == "archivo":
-    st.caption("📎 Arrastra tu archivo aquí o haz clic en Browse files para seleccionarlo")
+    st.caption("Arrastra tu archivo aquí o haz clic en Browse files para seleccionarlo")
     archivo = st.file_uploader("Sube tu Excel", type=["xlsx"], label_visibility="collapsed")
 
     if archivo:
