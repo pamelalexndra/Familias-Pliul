@@ -5,6 +5,7 @@ import random
 import math
 import io
 import base64
+import plotly.express as px
 from copy import deepcopy
 from collections import Counter
 from openpyxl import Workbook
@@ -471,49 +472,76 @@ if "mejores" in st.session_state and st.session_state.mejores:
 
     # ── ESTADÍSTICAS 
     with tab_stats:
-        grupos_ref = mejores[0]
+            grupos_ref = mejores[0]
 
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Total participantes", len(df_res))
-        col2.metric("Grupos", len(grupos_ref))
-        col3.metric("Promedio de personas por grupo", round(len(df_res) / len(grupos_ref), 1))
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Total participantes", len(df_res))
+            col2.metric("Grupos", len(grupos_ref))
+            col3.metric("Promedio de personas por grupo", round(len(df_res) / len(grupos_ref), 1))
 
-        st.write("---")
+            st.write("---")
 
-        cs, ce = st.columns(2)
-        with cs:
-            st.markdown("**Distribución por sexo**")
-            st.bar_chart(df_res["Sexo"].value_counts())
-        with ce:
-            st.markdown("**Distribución de edades**")
-            st.bar_chart(df_res["Edad"].value_counts().sort_index())
+            cs, ce = st.columns(2)
+            with cs:
+                st.markdown("**Distribución por sexo**")
+                fig_sexo = px.bar(
+                    df_res["Sexo"].value_counts().reset_index(),
+                    x="Sexo", y="count", color="Sexo",
+                    color_discrete_map={"Hombre": "#93c5fd", "Mujer": "#f9a8d4"},
+                )
+                fig_sexo.update_layout(
+                    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                    font_color="white", showlegend=False
+                )
+                st.plotly_chart(fig_sexo, use_container_width=True)
 
-        st.markdown("**Hombres y mujeres por familia**")
-        resumen = []
-        for i, g_indices in enumerate(grupos_ref):
-            g = df_res.loc[g_indices]
-            resumen.append({
-                "Familia": f"Familia {i+1}",
-                "Hombres": int((g["Sexo"] == "Hombre").sum()),
-                "Mujeres": int((g["Sexo"] == "Mujer").sum()),
-                "Edad promedio": round(g["Edad"].mean(), 1),
-                "Varianza edad": round(g["Edad"].var(), 2),
-                "Carreras únicas": int(g["Carrera"].nunique()),
-            })
-        df_resumen = pd.DataFrame(resumen).set_index("Familia")
-        st.bar_chart(df_resumen[["Hombres", "Mujeres"]])
+            with ce:
+                st.markdown("**Distribución de edades**")
+                edad_counts = df_res["Edad"].value_counts().sort_index().reset_index()
+                edad_counts.columns = ["Edad", "Cantidad"]
+                fig_edad = px.bar(edad_counts, x="Edad", y="Cantidad",
+                                color_discrete_sequence=["#a5b4fc"])
+                fig_edad.update_layout(
+                    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                    font_color="white", showlegend=False
+                )
+                st.plotly_chart(fig_edad, use_container_width=True)
 
-        st.markdown("**Resumen por familia**")
-        st.dataframe(df_resumen, use_container_width=True)
+            st.markdown("**Hombres y mujeres por familia**")
+            resumen = []
+            for i, g_indices in enumerate(grupos_ref):
+                g_stat = df_res.loc[g_indices]
+                resumen.append({
+                    "Familia": f"Familia {i+1}",
+                    "Hombres": int((g_stat["Sexo"] == "Hombre").sum()),
+                    "Mujeres": int((g_stat["Sexo"] == "Mujer").sum()),
+                    "Edad promedio": round(g_stat["Edad"].mean(), 1),
+                    "Varianza edad": round(g_stat["Edad"].var(), 2),
+                    "Carreras únicas": int(g_stat["Carrera"].nunique()),
+                })
+            df_resumen = pd.DataFrame(resumen)
+            fig_hm = px.bar(
+                df_resumen, x="Familia", y=["Hombres", "Mujeres"],
+                barmode="group",
+                color_discrete_map={"Hombres": "#93c5fd", "Mujeres": "#f9a8d4"},
+            )
+            fig_hm.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                font_color="white", legend_title_text=""
+            )
+            st.plotly_chart(fig_hm, use_container_width=True)
 
-        st.markdown("**Carreras más frecuentes**")
-        st.dataframe(
-            df_res["Carrera"].value_counts().reset_index().rename(
-                columns={"index": "Carrera", "count": "Cantidad"}
-            ),
-            use_container_width=True,
-            hide_index=True,
-        )
+            st.markdown("**Resumen por familia**")
+            st.dataframe(df_resumen.set_index("Familia"), use_container_width=True)
+
+            st.markdown("**Carreras más frecuentes**")
+            st.dataframe(
+                df_res["Carrera"].value_counts().reset_index().rename(
+                    columns={"index": "Carrera", "count": "Cantidad"}
+                ),
+                use_container_width=True,
+                hide_index=True,
+            )
 
     st.write("---")
     c1, c2, c3 = st.columns([1, 2, 1])

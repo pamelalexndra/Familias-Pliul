@@ -343,9 +343,7 @@ hr {
     }
 
     .personas-table th:nth-child(2),
-    .personas-table td:nth-child(2),
-    .personas-table th:nth-child(3),
-    .personas-table td:nth-child(3) {
+    .personas-table td:nth-child(2) {
         display: none;
     }
 
@@ -365,5 +363,21 @@ hr {
     .meta-chip {
         font-size: 0.72rem;
         padding: 2px 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .stTabs [data-baseweb="tab-list"] {
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        border-radius: 12px !important;
+        justify-content: flex-start !important;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        white-space: nowrap !important;
+        min-width: fit-content !important;
+        padding: 6px 14px !important;
+        font-size: 0.8rem !important;
     }
 }
