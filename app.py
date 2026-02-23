@@ -254,6 +254,7 @@ if st.session_state.modo == "archivo":
             df_leido = pd.read_excel(archivo)
             df_leido = df_leido.dropna(subset=["Nombre"])
             df_leido["Nombre"] = df_leido["Nombre"].str.strip()
+            df_leido = df_leido[df_leido["Nombre"].str.lower() != "nombre"]
             cols_req = {"Nombre", "Sexo", "Edad", "Carrera"}
             if not cols_req.issubset(df_leido.columns):
                 st.error(f"El archivo debe tener estas columnas: {cols_req}")
